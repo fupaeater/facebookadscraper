@@ -162,7 +162,7 @@ class FacebookAdScraper:
             params.pop('countries[0]', None)
 
         # small delay between requests to reduce chance of rate limiting
-        time.sleep(random.uniform(1, 3))
+        time.sleep(1)
 
         @retry(stop=stop_after_attempt(4), wait=wait_fixed(2), reraise=True)
         def req_ad():
@@ -195,8 +195,6 @@ class FacebookAdScraper:
             else:
                 clean_text = str(description)
             print(f"Error fetching ads for '{search_term}': {clean_text}")
-            print('Sleeping for 60 seconds...')
-            time.sleep(60)
             return {}
         return json_data
 
