@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 
-from facebook_ad_scraper.facebook_ad_scraper import FacebookAdScraper
+from facebook_ad_scraper import FacebookAdScraper
 
 
 def main():

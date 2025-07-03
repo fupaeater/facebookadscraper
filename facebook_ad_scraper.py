@@ -9,7 +9,7 @@ import tldextract
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-from .utils import extract_base_domain, create_session, utc_zone, cst_zone
+from utils import extract_base_domain, create_session, utc_zone, cst_zone
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 global_set = set()
