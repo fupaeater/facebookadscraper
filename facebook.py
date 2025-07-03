@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 
 from facebook_ad_scraper.facebook_ad_scraper import FacebookAdScraper
 
@@ -9,6 +10,8 @@ def main():
     #["30% off", "60% off", "Claim yours now", "Free worldwide shipping", "Get it now", "Get yours", "Grab yours now", "Click here", "Order link"]
     #["Shop Now","Sale","Free Shipping","50% off","Limited Time","Buy now","Order now", "Get Yours Now", "Only today", "Claim yours"]
 
+    # Ensure the output directory exists
+    os.makedirs("output", exist_ok=True)
     # csv file name with current time
     csv_file = f"output/{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
 
