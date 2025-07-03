@@ -16,10 +16,6 @@ global_set = set()
 # with open('proxies.txt', 'r') as file:
 #     proxies = file.readlines()
 
-# Default proxy configuration. You can edit these values directly if you prefer
-# to set the proxy inside the script instead of using environment variables.
-DEFAULT_PROXY_HTTP = None  # e.g. "http://user:pass@host:port"
-DEFAULT_PROXY_HTTPS = None  # e.g. "http://user:pass@host:port"
 
 class FacebookAdScraper:
     ads_url = "https://www.facebook.com/ads/library/async/search_ads/"
@@ -177,8 +173,8 @@ class FacebookAdScraper:
                 headers=self.headers,
                 data=self.payload,
                 proxies={
-                    'http': os.environ.get('PROXY_HTTP', DEFAULT_PROXY_HTTP),
-                    'https': os.environ.get('PROXY_HTTPS', DEFAULT_PROXY_HTTPS)
+                    'http': os.environ.get('PROXY_HTTP'),
+                    'https': os.environ.get('PROXY_HTTPS'),
                 },
                 timeout=10
             )
