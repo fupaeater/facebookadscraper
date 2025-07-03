@@ -3,6 +3,7 @@ import json
 import os
 import random
 import time
+import re
 
 import tldextract
 from concurrent.futures import ThreadPoolExecutor
@@ -160,10 +161,24 @@ class FacebookAdScraper:
             params.pop('media_type', None)
             params.pop('countries[0]', None)
 
+        # small delay between requests to reduce chance of rate limiting
+        time.sleep(random.uniform(1, 3))
+
         @retry(stop=stop_after_attempt(4), wait=wait_fixed(2), reraise=True)
         def req_ad():
-            response = create_session().post(self.ads_url, params=params, headers=self.headers, data=self.payload, proxies={'http': 'http://package-256469-country-us:bTYjLCJDrIppKckZ@proxy.soax.com:5000', 'https': 'http://package-256469-country-us:bTYjLCJDrIppKckZ@proxy.soax.com:5000'}, timeout=10)
-            print(response.status_code)
+            response = create_session().post(
+                self.ads_url,
+                params=params,
+                headers=self.headers,
+                data=self.payload,
+                proxies={
+                    'http': 'http://package-256469-country-us:bTYjLCJDrIppKckZ@proxy.soax.com:5000',
+                    'https': 'http://package-256469-country-us:bTYjLCJDrIppKckZ@proxy.soax.com:5000'
+                },
+                timeout=10
+            )
+            if response.status_code != 200:
+                print(f"Received status code {response.status_code}")
             return response
 
         try:
@@ -174,14 +189,15 @@ class FacebookAdScraper:
         json_text = response_text[len('for (;;);'):]
         json_data = json.loads(json_text)
         if 'error' in json_data:
-            print(f'ERROR {json_data["errorDescription"]}')
-            print(json_data)
-            # print('SLEEPING FOR 10 MINUTES')
-            # time.sleep(600)
-            # print('DONE SLEEPING FOR 10 MINUTES')
-        #     continue
-        # else:
-        #     break
+            description = json_data.get('errorDescription', {})
+            if isinstance(description, dict) and description.get('__html'):
+                clean_text = re.sub('<[^<]+?>', '', description['__html']).strip()
+            else:
+                clean_text = str(description)
+            print(f"Error fetching ads for '{search_term}': {clean_text}")
+            print('Sleeping for 60 seconds...')
+            time.sleep(60)
+            return {}
         return json_data
 
     @staticmethod
