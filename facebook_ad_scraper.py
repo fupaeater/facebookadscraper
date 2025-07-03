@@ -9,7 +9,7 @@ import tldextract
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-from utils import extract_base_domain, create_session, utc_zone, cst_zone
+from .fb_scraper_utils import extract_base_domain, create_session, utc_zone, cst_zone
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 global_set = set()
@@ -26,8 +26,8 @@ class FacebookAdScraper:
         'countries[0]': 'US',
         'publisher_platforms[0]': 'facebook',
         'publisher_platforms[1]': 'instagram',
-        'start_date[min]': '2025-06-19',
-        'start_date[max]': '2025-06-19',
+        'start_date[min]': '2025-06-17',
+        'start_date[max]': '2025-06-17',
         'media_type': 'video',
         'content_languages[0]': 'en',
         'search_type': 'keyword_exact_phrase'
@@ -195,8 +195,8 @@ class FacebookAdScraper:
             else:
                 clean_text = str(description)
             print(f"Error fetching ads for '{search_term}': {clean_text}")
-            print('Sleeping for 60 seconds...')
-            time.sleep(60)
+            print('Sleeping for 30 seconds...')
+            time.sleep(30)
             return {}
         return json_data
 
